@@ -23,28 +23,32 @@
     var NexT = window.NexT || {};
     var CONFIG = {"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":false,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}};
   </script>
-<meta property="og:type" content="website">
+<meta name="description" content="ArrayList通过源码分析扩容机制ArrayList 是 java 集合框架中比较常用的数据结构了。继承自 AbstractList，实现了 List 接口。底层基于数组实现容量大小动态变化。允许 null 的存在。 成员变量12345678transient Object[] elementData; &#x2F;&#x2F; non-private to simplify nested c">
+<meta property="og:type" content="article">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:url" content="http://example.com/2021/03/23/ArrayList%E9%80%9A%E8%BF%87%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ArrayList通过源码分析扩容机制ArrayList 是 java 集合框架中比较常用的数据结构了。继承自 AbstractList，实现了 List 接口。底层基于数组实现容量大小动态变化。允许 null 的存在。 成员变量12345678transient Object[] elementData; &#x2F;&#x2F; non-private to simplify nested c">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-03-23T02:35:55.817Z">
+<meta property="article:modified_time" content="2021-03-23T02:33:01.682Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2021/03/23/ArrayList%E9%80%9A%E8%BF%87%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6/">
 
 
 <script class="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
-<title>Hexo</title>
+<title> | Hexo</title>
   
 
 
@@ -130,7 +134,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           Table of Contents
@@ -143,6 +147,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ArrayList%E9%80%9A%E8%BF%87%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6"><span class="nav-number">1.</span> <span class="nav-text">ArrayList通过源码分析扩容机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F"><span class="nav-number">1.0.1.</span> <span class="nav-text">成员变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="nav-number">1.0.2.</span> <span class="nav-text">构造函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95"><span class="nav-number">1.0.3.</span> <span class="nav-text">操作方法</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -184,16 +189,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/23/ArrayList%E9%80%9A%E8%BF%87%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -206,9 +212,9 @@
       <meta itemprop="name" content="Hexo">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/03/23/ArrayList%E9%80%9A%E8%BF%87%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%E6%89%A9%E5%AE%B9%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -232,7 +238,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="ArrayList通过源码分析扩容机制"><a href="#ArrayList通过源码分析扩容机制" class="headerlink" title="ArrayList通过源码分析扩容机制"></a>ArrayList通过源码分析扩容机制</h1><p>ArrayList 是 java 集合框架中比较常用的数据结构了。继承自 AbstractList，实现了 List 接口。底层基于数组实现容量大小动态变化。允许 null 的存在。</p>
+        <h1 id="ArrayList通过源码分析扩容机制"><a href="#ArrayList通过源码分析扩容机制" class="headerlink" title="ArrayList通过源码分析扩容机制"></a>ArrayList通过源码分析扩容机制</h1><p>ArrayList 是 java 集合框架中比较常用的数据结构了。继承自 AbstractList，实现了 List 接口。底层基于数组实现容量大小动态变化。允许 null 的存在。</p>
 <h3 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">transient Object[] elementData; &#x2F;&#x2F; non-private to simplify nested class access</span><br><span class="line"></span><br><span class="line">    &#x2F;**</span><br><span class="line">     * The size of the ArrayList (the number of elements it contains).</span><br><span class="line">     *</span><br><span class="line">     * @serial</span><br><span class="line">     *&#x2F;</span><br><span class="line">    private int size;</span><br></pre></td></tr></table></figure>
 
 <p>elementData：对象数组，用来存储集合中的元素</p>
@@ -250,7 +256,6 @@
 <p>然后如果 minCapacity 大于 elementData 的长度，则对集合进行扩容。第一次添加元素时 elementData 的长度为零。触发 grow 函数。</p>
 <p>默认将扩容至原来容量的 1.5 倍。但是扩容之后也不一定适用，有可能太小，有可能太大。所以才会有下面两个 if 判断。如果1.5倍太小的话，则将我们所需的容量大小赋值给newCapacity，如果1.5倍太大或者我们需要的容量太大，那就直接拿 newCapacity = (minCapacity &gt; MAX_ARRAY_SIZE) ? Integer.MAX_VALUE : MAX_ARRAY_SIZE 来扩容。然后将原数组中的数据复制到大小为 newCapacity 的新数组中，并将新数组赋值给 elementData。</p>
 
-      
     </div>
 
     
@@ -258,189 +263,22 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/03/18/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E7%B1%BB%E6%A0%A1%E9%AA%8C%E6%8E%A5%E5%8F%A3%E5%85%A5%E5%8F%82/" rel="prev" title="">
+                  <i class="fa fa-chevron-left"></i> 
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
     </footer>
   </article>
 </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/18/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E7%B1%BB%E6%A0%A1%E9%AA%8C%E6%8E%A5%E5%8F%A3%E5%85%A5%E5%8F%82/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/03/18/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E7%B1%BB%E6%A0%A1%E9%AA%8C%E6%8E%A5%E5%8F%A3%E5%85%A5%E5%8F%82/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-      
-
-      <time title="Created: 2021-03-18 09:03:59 / Modified: 09:20:52" itemprop="dateCreated datePublished" datetime="2021-03-18T09:03:59+08:00">2021-03-18</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="自定义异常处理类校验接口入参"><a href="#自定义异常处理类校验接口入参" class="headerlink" title="自定义异常处理类校验接口入参"></a>自定义异常处理类校验接口入参</h2><h4 id="一、问题："><a href="#一、问题：" class="headerlink" title="一、问题："></a>一、问题：</h4><p>做沃易售的时候看到很多需要判断入参字段是否为空，为空的话就返回自定义提示！当判断入参很多的话用if判断的话代码就很繁琐。比如下面代码：</p>
-<p><img src="../image/d9122436-18af-4703-acaa-3874a1bca9a2.png"></p>
-<p>这只是3个，如果有10个的话代码量就很多了，虽然只需要cv。</p>
-<h4 id="二、解决方案："><a href="#二、解决方案：" class="headerlink" title="二、解决方案："></a>二、解决方案：</h4><h5 id="1、首先我们使用-Valid-和-NotBlank-注解将入参交给spring校验"><a href="#1、首先我们使用-Valid-和-NotBlank-注解将入参交给spring校验" class="headerlink" title="1、首先我们使用@Valid 和 @NotBlank 注解将入参交给spring校验"></a>1、首先我们使用@Valid 和 @NotBlank 注解将入参交给spring校验</h5><p>代码如下：<br>         入参对象字段注解：</p>
-<p><img src="../image/c0646e3c-f730-4ffe-be9f-5b924506fa11.png"></p>
-<pre><code>             （message为入参校验不通过返回的提示信息）
-
-     方法入参注解：
-</code></pre>
-<p><img src="../image/eabfbd91-159a-4e5d-bee3-2eab6e279fea.png"></p>
-<p>​        我们使用swagger测试一下：</p>
-<p><img src="../image/a751bf41-8c4a-49db-8089-eac193217bfd.png"></p>
-<p><img src="../image/790488e9-ed78-4be2-8634-3ab597cbc0db.png"></p>
-<pre><code>     从日志中可以发现，参数不符合校验规则会报MethodArgumentNotValidException异常。
-</code></pre>
-<h4 id="2、使用自定义的异常处理类来捕捉异常并返回错误编码和提示信息"><a href="#2、使用自定义的异常处理类来捕捉异常并返回错误编码和提示信息" class="headerlink" title="2、使用自定义的异常处理类来捕捉异常并返回错误编码和提示信息"></a>2、使用自定义的异常处理类来捕捉异常并返回错误编码和提示信息</h4><pre><code> 知道异常类型后，我们就来捕捉它       
-</code></pre>
-<p>​             自定义异常处理类：</p>
-<p><img src="../image/0c7c70a9-e9fd-4cd7-8eee-0678258c39d0.png"></p>
-<pre><code> @RestControllerAdvice：将被@RestControllerAdvice注解的类的内部所有被@ExceptionHandler,
-</code></pre>
-<p>​    @ InitBinderhe @ ModelAttribute注解的方法应用到所有被 @RequestMapping  注解的方法里面去。</p>
-<p>​    @ExceptionHandler 注解标明要捕捉的异常类型。</p>
-<p>​    BaseResp 为沃易售封装的返回报文格式，这个我们可以根据自己工程的报文格式来做。</p>
-<p> 我们将错误代码，及异常中自定义的message赋值并返回baseResp给前台。</p>
-<p>​    再来一次！</p>
-<p><img src="../image/f5afdfec-16b7-4242-9263-13edf07870cf.png"></p>
-<p>​    按照指定的报文格式返回校验结果了！</p>
-<h4 id="三、拓展："><a href="#三、拓展：" class="headerlink" title="三、拓展："></a>三、拓展：</h4><p>​     1、不仅可以校验是否为空还可以这样</p>
-<p><img src="../image/0c42e1e2-5f61-40a8-9afa-f7450149fb16.png"></p>
-<p>校验字段长度范围、校验数字大小！</p>
-<p> 2、当然不止校验参数，我们还可处理其他异常并返回</p>
-<pre><code> 在配置文件中设置上传文件最大为10M
-</code></pre>
-<p><img src="../image/b2be2bf7-2c6b-4844-be06-9993b2961e9f.png"></p>
-<p> 异常处理类中新增 MaxUploadSizeExceededException异常捕捉的方法</p>
-<p><img src="../image/6c16083d-8091-4a36-83d6-2f665e7b76bc.png"></p>
-<p>测试一下，上传超过10M的文件返回报文</p>
-<p><img src="../image/c544073b-abc1-4878-9c0a-d848bbf87a1e.png"></p>
-<p>超过10M被拦截！</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/03/16/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/03/16/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="post-title-link" itemprop="url">Untitled</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">Posted on</span>
-
-      <time title="Created: 2021-03-16 16:43:02" itemprop="dateCreated datePublished" datetime="2021-03-16T16:43:02+08:00">2021-03-16</time>
-    </span>
-      <span class="post-meta-item">
-        <span class="post-meta-item-icon">
-          <i class="far fa-calendar-check"></i>
-        </span>
-        <span class="post-meta-item-text">Edited on</span>
-        <time title="Modified: 2021-03-15 18:10:32" itemprop="dateModified" datetime="2021-03-15T18:10:32+08:00">2021-03-15</time>
-      </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><p>数据结构是计算机存储、组织数据的方式</p>
-<h3 id="线性结构"><a href="#线性结构" class="headerlink" title="线性结构"></a>线性结构</h3><p>列如：线性表(数组、链表、栈、队列、哈希表)</p>
-<h4 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h4><p>数组是一种顺序存储的线性表，所有元素的内存地址是连续的</p>
-<h3 id="树形结构"><a href="#树形结构" class="headerlink" title="树形结构"></a>树形结构</h3><p>二叉树、AVL树、红黑树、B树、堆、Trie、哈夫曼树、并查集</p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
 
 
 
